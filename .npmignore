@@ -2,6 +2,5 @@ coverage/
 test/
 
 .editorconfig
-.travis.yml
 
 *.tgz
