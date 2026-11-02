@@ -9,11 +9,12 @@
   "scripts": {
     "test": "jest --env node --coverage",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MikeSouza/serverless-associate-waf.git"
+    "url": "git+https://github.com/conqa/serverless-associate-waf.git"
   },
   "keywords": [
     "serverless",
@@ -31,18 +32,22 @@
   "author": "Mike Souza",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/MikeSouza/serverless-associate-waf/issues"
+    "url": "https://github.com/conqa/serverless-associate-waf/issues"
   },
-  "homepage": "https://github.com/MikeSouza/serverless-associate-waf#readme",
+  "homepage": "https://github.com/conqa/serverless-associate-waf#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@semantic-release/exec": "^7.1.0",
     "coveralls": "^3.0.9",
+    "husky": "^9.1.7",
     "jest": "^29.7.0",
     "semantic-release": "^25.0.9",
+    "semantic-release-slack-bot": "^4.0.2",
     "serverless": "^1.63.0"
   },
   "dependencies": {

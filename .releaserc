@@ -14,6 +14,13 @@
         "publishCmd": "npm publish --tag ${nextRelease.channel || 'latest'}"
       }
     ],
-    "@semantic-release/release-notes-generator"
+    "@semantic-release/release-notes-generator",
+    [
+      "semantic-release-slack-bot",
+      {
+        "markdownReleaseNotes": true,
+        "notifyOnSuccess": true,
+      }
+    ]
   ]
 }
