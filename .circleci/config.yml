@@ -1,0 +1,82 @@
+version: 2.1
+
+aliases:
+  - &workspace ~/workspace
+  - &container_config
+    docker:
+      - image: cimg/node:24.14.1
+    working_directory: *workspace
+
+  - &attach_workspace
+    attach_workspace:
+      at: *workspace
+
+jobs:
+  prepare:
+    <<: *container_config
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore cached npm modules
+          key: v1-npm-cache-{{ arch }}-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: npm ci --prefer-offline
+      - persist_to_workspace:
+          root: *workspace
+          paths:
+            - .
+      - save_cache:
+          name: Cache npm modules
+          key: v1-npm-cache-{{ arch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+  test:
+    <<: *container_config
+    steps:
+      - *attach_workspace
+      - run:
+          name: test
+          command: npm test
+  publish:
+    <<: *container_config
+    steps:
+      - *attach_workspace
+      - run:
+          name: Keyscan Github (HACK)
+          command: |
+            mkdir -p ~/.ssh
+            touch ~/.ssh/known_hosts
+            chmod 0600 ~/.ssh/known_hosts
+            ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+      - run:
+          # No NPM_TOKEN here: npm trusted publishing exchanges the OIDC claim below for a
+          # short-lived publish token. Configure the publisher on npmjs.com under the package's
+          # Settings -> Trusted Publishing (CircleCI), or the publish 404s.
+          name: publish
+          command: |
+            # @semantic-release/npm brings its own npm and `npm run` puts
+            # node_modules/.bin at the front of the PATH, so this is the npm
+            # that does the publishing. It has to be >= 11.11.0, the first
+            # release that recognises CircleCI as an OIDC provider.
+            PATH="$PWD/node_modules/.bin:$PATH" npm --version
+            export NPM_ID_TOKEN=$(circleci run oidc get --claims '{"aud": "npm:registry.npmjs.org"}')
+            npm run release
+
+workflows:
+  untagged-build:
+    jobs:
+      - prepare
+      - test:
+          requires:
+            - prepare
+      - publish:
+          context: npm-publishing
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+                - beta
+                - alpha

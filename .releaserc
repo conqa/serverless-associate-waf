@@ -1,0 +1,19 @@
+{
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/github",
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "publishCmd": "npm publish --tag ${nextRelease.channel || 'latest'}"
+      }
+    ],
+    "@semantic-release/release-notes-generator"
+  ]
+}

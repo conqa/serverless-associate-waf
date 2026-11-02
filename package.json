@@ -1,6 +1,6 @@
 {
   "name": "@conqa/serverless-associate-waf",
-  "version": "2.0.0-alpha.0",
+  "version": "0.0.0-semantically-released",
   "description": "Associate a regional WAF with the AWS API Gateway used by your Serverless stack.",
   "main": "lib/index.js",
   "directories": {
@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "jest --env node --coverage",
-    "coveralls": "cat ./coverage/lcov.info | coveralls"
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "release": "semantic-release"
   },
   "repository": {
     "type": "git",
@@ -38,8 +39,10 @@
     "access": "public"
   },
   "devDependencies": {
+    "@semantic-release/exec": "^7.1.0",
     "coveralls": "^3.0.9",
     "jest": "^29.7.0",
+    "semantic-release": "^25.0.9",
     "serverless": "^1.63.0"
   },
   "dependencies": {
@@ -47,5 +50,8 @@
     "@aws-sdk/client-waf-regional": "^3.0.0",
     "@aws-sdk/client-wafv2": "^3.0.0",
     "chalk": "^2.4.2"
+  },
+  "overrides": {
+    "npm": "^11.11.0"
   }
 }
